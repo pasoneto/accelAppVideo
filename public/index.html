@@ -1,0 +1,40 @@
+<!DOCTYPE html> 
+<html> 
+
+<script src="./accel.js"></script>
+<script src="./apiMethods.js"></script>
+
+<body> 
+
+<video id="myVideo" width="320" height="176" controls>
+  <source src="./video.mp4" type="video/mp4">
+</video>
+
+<div id="speedRate"></div>
+
+<script>
+
+//Initialize accelerometer
+window.addEventListener("devicemotion", handleMotionEvent, true);
+
+//Fictitious accelerometer data
+var norm = [1, 2, 1, 0, 1, 0, 1, 0]
+
+//Fetch video object
+var vid = document.getElementById("myVideo");
+
+//Fetch display of frequency
+var displayFreq = document.getElementById("speedRate")
+
+//Send accelerometer to server and fetch frequency, set playback rate, display frequency
+setInterval(async function(){
+  var freq = await sendAccel(norm)
+  //vid.playbackRate = freq;
+  displayFreq.innerHTML = freq['frequency']
+}, 500);
+
+
+</script> 
+
+</body> 
+</html>
