@@ -4,21 +4,27 @@
 <script src="./accel.js"></script>
 <script src="./apiMethods.js"></script>
 
+<style>
+#speedRate{
+   font-size: 12px;  
+}
+</style>
+
 <body> 
 
 <video id="myVideo" width="320" height="176" controls>
   <source src="./video.mp4" type="video/mp4">
 </video>
+  
+<audio id="myAudio">
+  <source src="./beatUnit.wav " type="audio/mpeg">
 
-<div id="speedRate"></div>
+</audio>
+
+<button id="start" onclick="collect()">Start collection</button>
+<div id="speedRate">Calculating BPMs</div>
 
 <script>
-
-//Initialize accelerometer
-window.addEventListener("devicemotion", handleMotionEvent, true);
-
-//Fictitious accelerometer data
-var norm = [1, 2, 1, 0, 1, 0, 1, 0]
 
 //Fetch video object
 var vid = document.getElementById("myVideo");
@@ -26,14 +32,27 @@ var vid = document.getElementById("myVideo");
 //Fetch display of frequency
 var displayFreq = document.getElementById("speedRate")
 
-//Send accelerometer to server and fetch frequency, set playback rate, display frequency
-setInterval(async function(){
-  var freq = await sendAccel(norm)
-  //vid.playbackRate = freq;
-  displayFreq.innerHTML = freq['frequency']
-}, 500);
+var factorSpeed = 1
 
+function collect(){
+    
+  vid.play()
+  
+  //Initialize accelerometer
+  window.addEventListener("devicemotion", handleMotionEvent, true);
+  
+  //Send accelerometer to server and fetch frequency, set playback rate, display frequency
+  setInterval(async function(){
+    var freq = await sendAccel(window.normhist)
+    var bpm = (60/(freq['bpm']))-40
+    displayFreq.innerHTML = bpm
+    window.normhist = []
+    var factorSpeed = bpm/60
+    vid.playbackRate = 1*factorSpeed;
+  }, 10000);
+}
 
+  
 </script> 
 
 </body> 

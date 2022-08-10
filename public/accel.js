@@ -1,7 +1,5 @@
 //Collect accelerometer history
-var xhist = []
-var yhist = []
-var zhist = []
+var normhist = []
 
 //Instantiate accelerometer
 function handleMotionEvent(event) {
@@ -10,8 +8,8 @@ function handleMotionEvent(event) {
     var y = event.acceleration.y;
     var z = event.acceleration.z;
 
-    xhist.push(x);
-    yhist.push(y);
-    zhist.push(z);
+    var norm = Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2)+Math.pow(z, 2));  
+    
+    normhist.push(norm)
     
 }
